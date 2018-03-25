@@ -1,0 +1,22 @@
+{
+  "name": "271_thirdparty_xm_olvote",
+  "version": "1.0.0",
+  "description": "oxlxs xm third party vote",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jwfan/271_thirdparty_xm_olvote.git"
+  },
+  "author": "floravan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jwfan/271_thirdparty_xm_olvote/issues"
+  },
+  "homepage": "https://github.com/jwfan/271_thirdparty_xm_olvote#readme",
+  "devDependencies": {
+    "electron": "^1.8.4"
+  }
+}
