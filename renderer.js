@@ -12,8 +12,11 @@ holder.ondragover = function () {
  holder.ondrop = function (e) {
    e.preventDefault();
    var file = e.dataTransfer.files[0];
-   fs.readFile(file.path,'utf8',function(err,data){
-     holder.textContent = data;
-   });
+   var lineReader = require(‘readline’).createInterface({
+     input: require(‘fs’).createReadStream(file.path)
+    });
+    lineReader.on(‘line’, function (line) {
+      console.log(line);
+    });
    return false;
  };
