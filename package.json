@@ -2,9 +2,9 @@
   "name": "271_thirdparty_xm_olvote",
   "version": "1.0.0",
   "description": "oxlxs xm third party vote",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
