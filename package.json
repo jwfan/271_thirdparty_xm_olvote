@@ -2,7 +2,7 @@
   "name": "271_thirdparty_xm_olvote",
   "version": "1.0.0",
   "description": "oxlxs xm third party vote",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron ."
   },

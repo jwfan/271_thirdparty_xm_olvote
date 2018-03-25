@@ -7,10 +7,21 @@
   <body>
     <h1>oxlxs vote for lxk</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-
+    <div>
+      Put your file (username&password) in current directory.
+      Rename it to be "userlist.xls"
+    </div>
+    <div>
+      <img src="lxk2.jpg" width="600" height="350">
+    </div>
+    <div>
+      <button id='startbut' style="width:100px;height:50px;margin:10px">start</button>
+    </div>
+    <div>
+      <img src="lxk2.jpg" width="150" height="50" id='codeimg'>
+      输入验证码
+      <textarea id='codeinput'></textarea>
+    </div>
     <script>
       // You can also require other files to run in this process
       require('./renderer.js')
