@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 var fs = require('fs');
 var holder = document.getElementById('holder');
+var text=document.getElementById('message');
 holder.ondragover = function () {
    return false;
 };
@@ -20,7 +21,7 @@ code_input.addEventListener("keydown", function(event) {
   if (event.which == 13 || event.keyCode == 13) {
     if (mission_left == 0) {
       document.getElementById('captcha').style = 'display:none';
-      alert('Done!');
+      alert('全部投票完毕!');
       return;
     }
     if (code_input.value.length > 0 && current_data != null && ick != null) {
@@ -111,9 +112,15 @@ function submit(data, captcha, ick) {
         post_param = {_json: true, callback: callback, sid: sid, qs: qs, _sign: _sign, serviceParam: serviceParam, captCode: captcha, user: '+86' + un, hash: hash(pw)};
         jar.setCookie(request.cookie('ick=' + ick), LOGIN_URL);
         request.post({url:LOGIN_URL + (new Date).getTime(), form: post_param, jar: jar, followRedirect: false}, function(err, res, body){
+          if(body.indexOf('403 Forbidden')>=0){
+            alert("请换IP！");
+            retry_data(data);
+            return;
+          }
           body_json = JSON.parse(body.substring(body.indexOf('{')));
           if (body_json.location == null) {
             console.log(body_json.desc);
+            text.value += body_json.desc + '\n';
             retry_data(data);
             return;
           }
@@ -129,7 +136,8 @@ function submit(data, captcha, ick) {
                 ac_end = final_url.indexOf('&', ac_start);
                 authcookie = final_url.substring(ac_start, ac_end);
                 request.get({url: VOTE_URL + authcookie, jar: jar, followRedirect: false}, function(err, res, body) {
-                  console.log(un + ':' + JSON.parse(body).msg);
+                  console.log(un + ' : ' + JSON.parse(body).msg);
+                  text.value += un + ' : ' + JSON.parse(body).msg + '\n';
                   mission_left--;
                 });
               });
