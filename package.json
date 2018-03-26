@@ -18,5 +18,8 @@
   "homepage": "https://github.com/jwfan/271_thirdparty_xm_olvote#readme",
   "devDependencies": {
     "electron": "^1.8.4"
+  },
+  "dependencies": {
+    "md5": "^2.2.1"
   }
 }
