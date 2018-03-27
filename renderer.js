@@ -62,7 +62,11 @@ holder.ondrop = function (e) {
 };
 
 function preprocess(line){
-  return {username: line.split(' ')[0].split('.')[1], password: line.split(' ')[1]};
+  if (line.includes('.'))
+    line = line.split('.')[1];
+  if (line.includes('\t'))
+    return {username: line.split('\t')[0], password: line.split('\t')[1]};
+  return {username: line.split(' ')[0], password: line.split(' ')[1]};
 }
 
 function next_data() {
@@ -72,7 +76,7 @@ function next_data() {
 }
 
 function retry_data(data) {
-  all_data.push(data);
+  all_data.unpush(data);
 }
 
 CAPTCODE_URL = 'https://account.xiaomi.com/pass/getCode?icodeType=login&';
