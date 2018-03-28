@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "pack": "build --dir",
-    "dist": "build -w",
+    "dist": "build -wm",
     "start": "electron ."
   },
   "repository": {
@@ -25,16 +25,5 @@
   "dependencies": {
     "md5": "^2.2.1",
     "request": "^2.85.0"
-  },
-"win": {
-  "target": [
-    {
-      "target": "portable",
-      "arch": [
-        "x64",
-        "ia32"
-      ]
-    }
-  ]
-}
+  }
 }
