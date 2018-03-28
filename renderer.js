@@ -76,7 +76,7 @@ function next_data() {
 }
 
 function retry_data(data) {
-  all_data.unpush(data);
+  all_data.push(data);
 }
 
 CAPTCODE_URL = 'https://account.xiaomi.com/pass/getCode?icodeType=login&';
@@ -125,6 +125,10 @@ function submit(data, captcha, ick) {
           if (body_json.location == null) {
             console.log(body_json.desc);
             text.value += body_json.desc + '\n';
+            if (body_json.desc == '登陆验证失败') {
+              mission_left--;
+              return;
+            }
             retry_data(data);
             return;
           }
