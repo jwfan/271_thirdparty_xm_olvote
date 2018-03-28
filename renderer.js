@@ -123,9 +123,9 @@ function submit(data, captcha, ick) {
           }
           body_json = JSON.parse(body.substring(body.indexOf('{')));
           if (body_json.location == null) {
-            console.log(body_json.desc);
-            text.value += body_json.desc + '\n';
-            if (body_json.desc == '登陆验证失败') {
+            console.log(un + ' : ' + body_json.desc);
+            text.value += un + ' : ' + body_json.desc + '\n';
+            if (body_json.desc == '登录验证失败') {
               mission_left--;
               return;
             }
