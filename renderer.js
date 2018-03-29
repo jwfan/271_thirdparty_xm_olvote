@@ -1,6 +1,15 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+
+CAPTCODE_URL = 'https://account.xiaomi.com/pass/getCode?icodeType=login&';
+FIRST_URL = 'https://passport.iqiyi.com/apis/thirdparty/login.action?type=30&isiframe=1&ppsNew=1&agenttype=39&isapp=0&pps_use_https_redirect=true&use_https_redirect=true&url=https://game.iqiyi.com/weblogin/login?preurl=http://www.iqiyi.com/common/idol_vote.html';
+LOGIN_URL = 'https://account.xiaomi.com/pass/serviceLoginAuth2?_dc=';
+VOTE_URL = 'http://vote.i.iqiyi.com/eagle/outer/join_common_vote?vid=1251575812010177&options=%7B%221218905683020731%22%3A%5B1487907121030964%5D%7D&appid=6&';
+DFP_URL = 'https://cook.iqiyi.com/security/dfp_pcw/sign';
+
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36', 'Host': 'vote.i.iqiyi.com', 'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,ja;q=0.6';
+
 var fs = require('fs');
 var holder = document.getElementById('holder');
 var text=document.getElementById('message');
@@ -10,7 +19,6 @@ holder.ondragover = function () {
 holder.ondragleave = holder.ondragend = function () {
  return false;
 };
-
 code_img = document.getElementById('codeimg');
 code_img.onclick = function () {
   getCaptcha();
@@ -79,11 +87,6 @@ function retry_data(data) {
   all_data.push(data);
 }
 
-CAPTCODE_URL = 'https://account.xiaomi.com/pass/getCode?icodeType=login&';
-FIRST_URL = 'https://passport.iqiyi.com/apis/thirdparty/login.action?type=30&isiframe=1&ppsNew=1&agenttype=39&isapp=0&pps_use_https_redirect=true&use_https_redirect=true&url=https://game.iqiyi.com/weblogin/login?preurl=http://www.iqiyi.com/common/idol_vote.html';
-LOGIN_URL = 'https://account.xiaomi.com/pass/serviceLoginAuth2?_dc=';
-VOTE_URL = 'http://vote.i.iqiyi.com/eagle/outer/join_common_vote?vid=1251575812010177&options=%7B%221218905683020731%22%3A%5B1487907121030964%5D%7D&appid=6&authCookie=';
-
 var ick = null;
 
 function getCaptcha(){
@@ -123,7 +126,7 @@ function submit(data, captcha, ick) {
           }
           body_json = JSON.parse(body.substring(body.indexOf('{')));
           if (body_json.location == null) {
-            console.log(un + ' : ' + body_json.desc);
+            console.log(un + ' : ' + body);
             text.value += un + ' : ' + body_json.desc + '\n';
             if (body_json.desc == '登录验证失败') {
               mission_left--;
@@ -143,10 +146,24 @@ function submit(data, captcha, ick) {
                 ac_start = final_url.indexOf(ac_name) + ac_name.length;
                 ac_end = final_url.indexOf('&', ac_start);
                 authcookie = final_url.substring(ac_start, ac_end);
-                request.get({url: VOTE_URL + authcookie, jar: jar, followRedirect: false}, function(err, res, body) {
-                  console.log(un + ' : ' + JSON.parse(body).msg);
-                  text.value += un + ' : ' + JSON.parse(body).msg + '\n';
-                  mission_left--;
+                var dfp_request = require('request');
+                dfp_request.post({url: DFP_URL, form: cook_param_builder(), followRedirect: false}, function(err, res, body) {
+                  var json = JSON.parse(body);
+                  if (json.code == 0)
+                    dfp = json.result.dfp;
+                  else {
+                    console.log('DFP failed: ' + json.message);
+                    retry_data(data);
+                    return;
+                  }
+                  vote_request = VOTE_URL + 'authCookie=' + authcookie + '&dfp=' + dfp;
+                  headers = {'Origin': 'http://www.iqiyi.com', 'Accept': 'application/json', 'Referer': 'http://www.iqiyi.com/common/idol_vote.html', 'User-Agent': USER_AGENT}
+                  console.log(vote_request)
+                  request.get({url: vote_request, headers: headers, jar: jar, followRedirect: false}, function(err, res, body) {
+                    console.log(un + ' : ' + body);
+                    text.value += un + ' : ' + JSON.parse(body).msg + '\n';
+                    mission_left--;
+                  });
                 });
               });
             });
@@ -168,4 +185,66 @@ function extract(text, key, pre_key, sep='"') {
   end_index = text.indexOf('\n', start_index);
   raw =  text.substring(start_index, end_index);
   return raw.substring(raw.indexOf(sep) + 1, raw.lastIndexOf(sep));
+}
+
+function cook_param_builder() {
+  plat = 'PCWEB';
+  ver = '1.0';
+  nifc = false;
+  function mi_sub() {
+      return Math.floor(65536 * (1 + Math.random())).toString(16).substring(1)
+  }
+  mi = mi_sub() + mi_sub() + "-" + mi_sub() + "-" + mi_sub() + "-" + mi_sub() + "-" + mi_sub() + mi_sub() + mi_sub();
+  dim = {
+     "jn": USER_AGENT,
+     "cm":"zh-CN",
+     "gu":24,
+     "uf":2,
+     "jr":[
+        1280,
+        800
+     ],
+     "di":[
+        1280,
+        688
+     ],
+     "zp":420,
+     "uh":1,
+     "sh":1,
+     "he":1,
+     "rv":"unknown",
+     "nx":"MacIntel",
+     "iw":"unknown",
+     "qm":[
+        "Chrome PDF Viewer::::application/pdf~pdf"
+     ],
+     "fk":false,
+     "rg":false,
+     "xy":false,
+     "jm":false,
+     "ba":false,
+     "tm":[
+        0,
+        false,
+        false
+     ],
+     "au":true,
+     "mi": mi,
+     "cl": plat,
+     "sv": ver,
+     "ifm":[
+        false,
+        null,
+        null,
+        null
+     ],
+     "ex":"",
+     "pv":false
+  }
+  dim = new Buffer.from(JSON.stringify(dim)).toString('base64');
+  // wr = require('md5')(Math.random());
+  n = '';
+  n += dim + plat + ver;
+  sig =  require('crypto').createHmac('sha1','eade56028e252b77f7a0b8792e58b9cc').update(n).digest('hex').toUpperCase();
+  return {dim: dim, plat: plat, ver: ver, sig: sig, nifc: nifc};
 }
