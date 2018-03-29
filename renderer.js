@@ -8,7 +8,7 @@ LOGIN_URL = 'https://account.xiaomi.com/pass/serviceLoginAuth2?_dc=';
 VOTE_URL = 'http://vote.i.iqiyi.com/eagle/outer/join_common_vote?vid=1251575812010177&options=%7B%221218905683020731%22%3A%5B1487907121030964%5D%7D&appid=6&';
 DFP_URL = 'https://cook.iqiyi.com/security/dfp_pcw/sign';
 
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36', 'Host': 'vote.i.iqiyi.com', 'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,ja;q=0.6';
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36";
 
 var fs = require('fs');
 var holder = document.getElementById('holder');
